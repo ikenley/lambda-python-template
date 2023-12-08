@@ -1,64 +1,29 @@
-Skeleton project for AWS Lambda functions in Python, deployed using Serverless
-==============================================================================
+# lambda-python-template
 
-Use this project as a starting point when you want to write an AWS Lambda
-function (or collection of functions) in Python. It assumes that you are using
-Python 3.6.
+Template for a small (no dependencies, no complex logic) Lambda Function written in Python
 
-## Prerequisites (on your computer or build server):
+Lambda Functions have two sustainable equilibria:
 
- * Python 3.6
-   * virtualenv
-   * pip
- * Node.js
-   * npm
- * GNU make
+1. Small:
+   - Quick and dirty
+   - A few lines of code that would fit in one `function.py` module
+   - Zero external dependencies
+   - 30 years ago these would have been Perl scripts
+   - Managed via a zip archive in an S3 bucket
+   - These tend to solve jobs like "when an S3 object drops, publish a message to an SQS queue"
+2. Big:
+   - Fully featured services, with tests, a boostrapping service, etc.
+   - Similar to a large REST API, except it uses a Lambda event for an entry point rather than a controller
+   - External package dependencies
+   - Managed via a Docker image that extends the base Lambda image
+   - These exist because a Lambda hook is the only option available (e.g. Cognito event hook)
+   - For an example of this, see [https://github.com/ikenley/ai-app](https://github.com/ikenley/ai-app)
 
-Any other dependencies (including Serverless) will be installed by the makefile.
-
-## Getting started
-
-Clone this project onto your hard drive:
-
-    git clone https://github.com/ukparliament/lambda-template.git
-
-Create a new empty repository on GitHub (you probably don't want to clone this
-project directly, as you want it to be a separate entity). Then change the
-origin to point to the URL of your new repository:
-
-    git remote set-url origin git@github.com:ukparliament/your-new-project.git
-
-Edit the following file to configure a name for your Serverless project and
-your Lambda functions, and to reconfigure any triggers, IAM permissions, VPC
-settings etc:
-
- * src/serverless.yml
-
-Make whatever other changes are necessary, then push:
-
-    git push origin master
-
-## Project layout
-
-Source code for your lambda function is in the `src` directory. Your unit tests
-go in `src/tests`.
-
-## Testing
-
-Run `make test` to run your unit tests.
-Run `make deploy` to deploy your project to AWS Lambda.
-
-## Caveats
-
-Note that you should use absolute rather than relative imports when importing
-modules and packages in your own code into your tests.
-
-DO NOT add an `__init__.py` file to the `src` directory or your unit tests may
-break.
+This repository has boilerplate code for (1), the quick-and-dirty function.
 
 ---
 
-## Ian additions
+## Getting Started Locally
 
 https://developer.nytimes.com/docs/most-popular-product/1/overview
 
@@ -66,6 +31,8 @@ https://developer.nytimes.com/docs/most-popular-product/1/overview
 python3 -m pip install --user virtualenv
 sudo apt install python3-virtualenv
 source ./.venv/bin/activate
+cp env.example.sh env.sh
+make hello_world_local
 ```
 
 ---
@@ -87,10 +54,3 @@ terraform apply
 ```
 aws s3api list-objects --bucket my-data-lake --prefix "news/nytimes/mostpopular/emailed/1/2023"
 ```
-
----
-
-## TODO
-
-- directory restructure
-- README cleanup

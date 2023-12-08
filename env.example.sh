@@ -1,0 +1,2 @@
+export API_KEY="TODO"
+export S3_BUCKET_NAME="TODO"

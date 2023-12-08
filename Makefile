@@ -8,7 +8,7 @@ CREDSTASH_KEY = $(shell \
 	jq -r '.KeyMetadata.Arn' \
 )
 
-.venv:
+venv:
 	virtualenv -p python3 .venv
 	.venv/bin/pip install -r ./src/requirements.txt
 
@@ -40,3 +40,9 @@ src/test-requirements.txt: .venv
 
 test: src/test-requirements.txt
 	bash -c "source .venv/bin/activate && cd src && pytest tests"
+
+get_top_news_local:
+	. ./env.sh && python3 src/get_top_news_local.py
+
+revisit_news_local:
+	. ./env.sh && python3 src/revisit_news_local.py

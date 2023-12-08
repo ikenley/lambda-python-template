@@ -55,3 +55,42 @@ modules and packages in your own code into your tests.
 
 DO NOT add an `__init__.py` file to the `src` directory or your unit tests may
 break.
+
+---
+
+## Ian additions
+
+https://developer.nytimes.com/docs/most-popular-product/1/overview
+
+```
+python3 -m pip install --user virtualenv
+sudo apt install python3-virtualenv
+source ./.venv/bin/activate
+```
+
+---
+
+## Infrasctructure as Code (IaC)
+
+This project uses Terraform to manage the cloud infrastructure (both the AWS resources and the CI/CD system).
+
+```
+cd terraform/projects/dev/main.tf
+terraform init
+terraform apply
+```
+
+---
+
+## Ad hoc scripting
+
+```
+aws s3api list-objects --bucket my-data-lake --prefix "news/nytimes/mostpopular/emailed/1/2023"
+```
+
+---
+
+## TODO
+
+- revisit_news_function
+  - https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3/client/list_objects_v2.html

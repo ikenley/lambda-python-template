@@ -1,4 +1,4 @@
-from get_top_news_function import handler
+from get_top_news.function import handler
 
 event = {
   "key1": "value1",

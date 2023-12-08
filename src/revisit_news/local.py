@@ -1,4 +1,4 @@
-from revisit_news_function import handler
+from revisit_news.function import handler
 
 event = {
     "version": "0",

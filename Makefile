@@ -41,8 +41,11 @@ src/test-requirements.txt: .venv
 test: src/test-requirements.txt
 	bash -c "source .venv/bin/activate && cd src && pytest tests"
 
+hello_world_local:
+	. ./env.sh && python3 src/hello_world/local.py
+
 get_top_news_local:
-	. ./env.sh && python3 src/get_top_news_local.py
+	. ./env.sh && python3 src/get_top_news/local.py
 
 revisit_news_local:
-	. ./env.sh && python3 src/revisit_news_local.py
+	. ./env.sh && python3 src/revisit_news/local.py

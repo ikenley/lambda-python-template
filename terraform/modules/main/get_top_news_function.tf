@@ -17,12 +17,12 @@ module "get_top_news_lambda" {
 
   function_name = local.get_top_news_id
   description   = local.get_top_news_desc
-  handler       = "get_top_news_function.handler"
+  handler       = "function.handler"
   runtime       = "python3.10"
   publish       = true
   timeout       = 30
 
-  source_path = "../../../src"
+  source_path = "../../../src/get_top_news"
 
   #vpc_subnet_ids         = var.private_subnets # var.public_subnets #
   #vpc_security_group_ids = [aws_security_group.revisit_prediction.id]

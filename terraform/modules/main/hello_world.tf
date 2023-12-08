@@ -16,12 +16,12 @@ module "hello_world_lambda" {
 
   function_name = local.hello_world_id
   description   = "Test function which prints hello world"
-  handler       = "hello_world_function.handler"
+  handler       = "function.handler"
   runtime       = "python3.10"
   publish       = true
   timeout       = 10 # 30 seconds
 
-  source_path = "../../../src"
+  source_path = "../../../src/hello_world"
 
   #vpc_subnet_ids         = var.private_subnets # var.public_subnets #
   #vpc_security_group_ids = [aws_security_group.revisit_prediction.id]

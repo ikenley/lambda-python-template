@@ -16,12 +16,12 @@ module "revisit_news_lambda" {
 
   function_name = local.revisit_news_id
   description   = local.revisit_news_desc
-  handler       = "revisit_news_function.handler"
+  handler       = "function.handler"
   runtime       = "python3.10"
   publish       = true
   timeout       = 30
 
-  source_path = "../../../src"
+  source_path = "../../../src/revisit_news"
 
   environment_variables = {
     Serverless                    = "Terraform"

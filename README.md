@@ -42,7 +42,7 @@ make hello_world_local
 This project uses Terraform to manage the cloud infrastructure (both the AWS resources and the CI/CD system).
 
 ```
-cd terraform/projects/dev/main.tf
+cd terraform/projects/dev
 terraform init
 terraform apply
 ```

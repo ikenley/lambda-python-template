@@ -34,7 +34,7 @@ def handler(event, context):
 
     top_recent_articles = get_articles_from_s3(s3_bucket, s3_key)
     historical_articles_result = get_historical_articles()
-    send_email(top_recent_articles, historical_articles_result)
+    send_emails(top_recent_articles, historical_articles_result)
     return "Success"
 
 
@@ -81,15 +81,27 @@ def get_date_from_s3_key(s3_key):
     return date_label
 
 
-def send_email(recent_articles, historical_articles_result):
+def send_emails(recent_articles, historical_articles_result):
     to_email_addresses = get_to_email_addresses()
 
     recent_message = create_article_list_message(recent_articles)
-    historical_message = create_article_list_message(historical_articles_result["articles"])
+    historical_message = create_article_list_message(
+        historical_articles_result["articles"]
+    )
+    historical_date = historical_articles_result["date_label"]
 
+    for email_address in to_email_addresses:
+        send_email_to_recipient(
+            recent_message, historical_message, historical_date, email_address
+        )
+
+
+def send_email_to_recipient(
+    recent_message, historical_message, historical_date, to_email_address
+):
     ses_client.send_email(
         Destination={
-            "ToAddresses": to_email_addresses,
+            "ToAddresses": [to_email_address],
         },
         Message={
             "Body": {
@@ -99,7 +111,7 @@ def send_email(recent_articles, historical_articles_result):
                     <ol>
                     {recent_message["html_list"]}
                     </ol>
-                    The following stories were the most emailed NYT artices on {historical_articles_result["date_label"]}:
+                    The following stories were the most emailed NYT artices on {historical_date}:
                     <ol>
                     {historical_message["html_list"]}
                     </ol>
@@ -109,7 +121,7 @@ def send_email(recent_articles, historical_articles_result):
                     "Charset": "UTF-8",
                     "Data": f"""The following stories are most emailed NYT artices in the past day:
                     {recent_message["text_list"]}
-                    The following stories were the most emailed NYT artices on {historical_articles_result["date_label"]}:
+                    The following stories were the most emailed NYT artices on {historical_date}:
                     {historical_message["text_list"]}
                     """,
                 },

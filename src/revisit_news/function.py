@@ -63,7 +63,7 @@ def get_historical_articles():
 def get_random_historical_file():
     response = s3_client.list_objects_v2(
         Bucket=S3_BUCKET_NAME,
-        Prefix="news/nytimes/mostpopular/emailed/1/2023",
+        Prefix="news/nytimes/mostpopular/emailed/1/2024",
     )
     response_contents = response["Contents"]
     random_element = random.choice(response_contents)

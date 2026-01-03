@@ -27,13 +27,13 @@ provider "aws" {
 module "main" {
   source = "../../modules/main"
 
-  namespace    = "ik"
-  env          = "dev"
-  is_prod      = false
+  namespace = "ik"
+  env       = "dev"
+  is_prod   = false
 
   # git_repo   = "ikenley/ai-app"
   # git_branch = "image" #"main"
 
-  news_api_key = var.news_api_key
-
+  news_api_key   = var.news_api_key
+  openai_api_key = var.openai_api_key
 }

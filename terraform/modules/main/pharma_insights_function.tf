@@ -4,33 +4,57 @@
 
 locals {
   pharmai_id   = "${local.id}-pharmai"
-  pharmai_desc = "Summarize phara insights using AI"
+  pharmai_desc = "Summarize pharma insights using AI"
 }
 
 # ------------------------------------------------------------------------------
-# Revisit Prediction Lambda Function
+# Pharma AI insights Lambda Function
 # ------------------------------------------------------------------------------
 
 module "pharmai" {
-  source = "terraform-aws-modules/lambda/aws"
+  source  = "terraform-aws-modules/lambda/aws"
+  version = "8.1.2"
 
   function_name = local.pharmai_id
   description   = local.pharmai_desc
   handler       = "function.handler"
-  runtime       = "python3.10"
+  runtime       = "python3.12"
   publish       = true
-  timeout       = 30
+  timeout       = 180 # 3 minutes
 
   source_path = "../../../src/pharmai/src"
+
+  layers = [
+    module.pharmai_layer.lambda_layer_arn,
+  ]
 
   environment_variables = {
     EVENT_BUS_NAME                = data.aws_ssm_parameter.event_bus_name.value
     S3_BUCKET_NAME                = data.aws_ssm_parameter.data_lake_s3_bucket_name.value
     SES_FROM_EMAIL_ADDRESS        = data.aws_ssm_parameter.ses_email_address.value
-    TO_EMAIL_ADDRESSES_PARAM_NAME = aws_ssm_parameter.to_email_addresses_json.name
+    TO_EMAIL_ADDRESSES_PARAM_NAME = aws_ssm_parameter.pharmai_to_email_addresses_json.name
+    OPENAI_API_KEY                = var.openai_api_key
   }
 
   tags = local.tags
+}
+
+module "pharmai_layer" {
+  source  = "terraform-aws-modules/lambda/aws"
+  version = "8.1.2"
+
+  create_layer = true
+
+  layer_name          = "${local.pharmai_id}-layer"
+  description         = "Lambda layer for ${local.pharmai_id}"
+  runtime             = "python3.12"
+  compatible_runtimes = ["python3.12"]
+
+  source_path = [{
+    pip_requirements = "../../../src/pharmai/layer/requirements.txt"
+    prefix_in_zip    = "python"
+  }]
+
 }
 
 resource "aws_iam_policy" "pharmai" {
@@ -74,7 +98,7 @@ resource "aws_iam_policy" "pharmai" {
         "Action" : [
           "ssm:GetParameter"
         ],
-        "Resource" : [aws_ssm_parameter.to_email_addresses_json.arn]
+        "Resource" : [aws_ssm_parameter.pharmai_to_email_addresses_json.arn]
       },
       {
         "Effect" : "Allow",

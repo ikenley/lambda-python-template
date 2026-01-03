@@ -21,6 +21,17 @@ resource "aws_ssm_parameter" "to_email_addresses_json" {
 
   # This will managed by an external process
   lifecycle {
-    ignore_changes = [ value ]
+    ignore_changes = [value]
+  }
+}
+
+resource "aws_ssm_parameter" "pharmai_to_email_addresses_json" {
+  name  = "${local.output_prefix}/pharmai/to_email_addresses_json"
+  type  = "SecureString"
+  value = "['user@example.net']"
+
+  # This will managed by an external process
+  lifecycle {
+    ignore_changes = [value]
   }
 }

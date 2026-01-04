@@ -126,28 +126,18 @@ resource "aws_cloudwatch_event_rule" "pharmai" {
   name        = local.pharmai_id
   description = local.pharmai_desc
 
-  event_bus_name = data.aws_ssm_parameter.event_bus_name.value
-
-  event_pattern = jsonencode({
-    source = [
-      local.top_news_event_source
-    ]
-    detail-type = [
-      "get_top_news_success"
-    ]
-  })
+  schedule_expression = "cron(0 10 * * ? *)" # Every morning at 5am EST # 0 0 6 ? * TUE # Every Tuesday at 6am
 
   tags = local.tags
 }
 
 resource "aws_cloudwatch_event_target" "pharmai" {
-  target_id      = local.pharmai_id
-  rule           = aws_cloudwatch_event_rule.pharmai.name
-  event_bus_name = data.aws_ssm_parameter.event_bus_name.value
-  arn            = module.pharmai.lambda_function_arn
+  target_id = local.pharmai_id
+  rule      = aws_cloudwatch_event_rule.pharmai.name
+  arn       = module.pharmai.lambda_function_arn
 }
 
-resource "aws_lambda_permission" "pharmai" {
+resource "aws_lambda_permission" "pharmai_lambda" {
   statement_id  = "AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
   function_name = module.pharmai.lambda_function_name

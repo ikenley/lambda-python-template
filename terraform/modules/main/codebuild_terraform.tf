@@ -59,7 +59,7 @@ resource "aws_codebuild_project" "codebuild_terraform" {
 
     environment_variable {
       name  = "PROJECT_PATH"
-      value = "terraform/modules/main"
+      value = "terraform/projects/dev"
     }
 
     environment_variable {

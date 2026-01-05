@@ -1,0 +1,25 @@
+version: 0.2
+
+phases:
+  # pre_build:
+  #   commands:
+  #     - echo Logging into DockerHub
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo "Installing Terraform"
+      - sudo yum install -y yum-utils
+      - sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+      - sudo yum --showduplicate list terraform
+      - sudo yum -y install terraform-1.4.6-1.x86_64
+      - echo "Configuring project"
+      - echo "PROJECT_PATH=$PROJECT_PATH"
+      - cd $PROJECT_PATH
+      - terraform init
+      - | 
+        if [[ "$TERRAFORM_ACTION" = "apply" ]];
+        then
+          terraform $TERRAFORM_ACTION -auto-approve
+        else
+          terraform $TERRAFORM_ACTION
+        fi

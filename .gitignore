@@ -154,3 +154,5 @@ terraform.rc
 # Project-specific
 **/builds/*
 env.sh
+
+*.html

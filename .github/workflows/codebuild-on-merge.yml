@@ -1,5 +1,9 @@
 name: Trigger CodeBuild on PR Merge
 
+permissions:
+  id-token: write # Required for OIDC authentication
+  contents: read # Recommended for checking out code
+
 on:
   pull_request:
     types: [closed]
@@ -7,7 +11,7 @@ on:
       - main
   push:
     branches:
-      - pharmai
+      - pharmai-workflow
 
 jobs:
   trigger-codebuild:

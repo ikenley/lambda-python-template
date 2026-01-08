@@ -4,7 +4,7 @@ phases:
   phases:
   install:
     runtime-versions:
-      python: 3.12
+      - python: 3.12
   build:
     commands:
       - echo Build started on `date`

@@ -120,7 +120,7 @@ resource "aws_iam_role_policy_attachment" "pharmai" {
 }
 
 # ------------------------------------------------------------------------------
-# Event trigger
+# CRON scheduled Event trigger
 # ------------------------------------------------------------------------------
 
 resource "aws_cloudwatch_event_rule" "pharmai" {
@@ -144,4 +144,40 @@ resource "aws_lambda_permission" "pharmai_lambda" {
   function_name = module.pharmai.lambda_function_name
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.pharmai.arn
+}
+
+# ------------------------------------------------------------------------------
+# Invoke the Lambda function whenever new code is deployed
+# ------------------------------------------------------------------------------
+
+locals {
+  pharmai_codebuild_id = "${local.pharmai_id}-codebuild"
+}
+
+resource "aws_cloudwatch_event_rule" "codebuild_success" {
+  name        = local.pharmai_codebuild_id
+  description = "Trigger ${local.pharmai_id} when ${local.codebuild_terraform_id} succeeds"
+
+  event_pattern = jsonencode({
+    source      = ["aws.codebuild"]
+    detail-type = ["CodeBuild Build State Change"]
+    detail = {
+      build-status = ["SUCCEEDED"]
+      project-name = ["ik-dev-lambda-demo-terraform"]
+    }
+  })
+}
+
+resource "aws_cloudwatch_event_target" "codebuild_success" {
+  rule      = aws_cloudwatch_event_rule.codebuild_success.name
+  target_id = local.pharmai_codebuild_id
+  arn       = module.pharmai.lambda_function_arn
+}
+
+resource "aws_lambda_permission" "codebuild_success" {
+  statement_id  = "AllowExecutionFromEventBridge"
+  action        = "lambda:InvokeFunction"
+  function_name = module.pharmai.lambda_function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.codebuild_success.arn
 }

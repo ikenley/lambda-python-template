@@ -32,7 +32,7 @@ module "main" {
   is_prod   = false
 
   # git_repo   = "ikenley/ai-app"
-  git_branch = "pharma" #"main"
+  git_branch = "main"
 
   news_api_key   = var.news_api_key
   openai_api_key = var.openai_api_key

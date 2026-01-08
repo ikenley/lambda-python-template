@@ -54,3 +54,5 @@ terraform apply
 ```
 aws s3api list-objects --bucket my-data-lake --prefix "news/nytimes/mostpopular/emailed/1/2023"
 ```
+
+Force push

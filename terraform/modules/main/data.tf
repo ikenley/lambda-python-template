@@ -19,6 +19,9 @@ data "aws_ssm_parameter" "ses_email_address" {
 data "aws_ssm_parameter" "ses_email_arn" {
   name = "${local.core_output_prefix}/ses_email_arn"
 }
+data "aws_ses_domain_identity" "main" {
+  domain = "ian-and-catherine.com"
+}
 
 # Data environment
 data "aws_ssm_parameter" "data_lake_s3_bucket_arn" {

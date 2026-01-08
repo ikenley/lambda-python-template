@@ -3,8 +3,9 @@
 # ------------------------------------------------------------------------------
 
 locals {
-  pharmai_id   = "${local.id}-pharmai"
-  pharmai_desc = "Summarize pharma insights using AI"
+  pharmai_id             = "${local.id}-pharmai"
+  pharmai_desc           = "Summarize pharma insights using AI"
+  ses_from_email_address = "pharmai@ian-and-catherine.com"
 }
 
 # ------------------------------------------------------------------------------
@@ -31,7 +32,7 @@ module "pharmai" {
   environment_variables = {
     EVENT_BUS_NAME                = data.aws_ssm_parameter.event_bus_name.value
     S3_BUCKET_NAME                = data.aws_ssm_parameter.data_lake_s3_bucket_name.value
-    SES_FROM_EMAIL_ADDRESS        = data.aws_ssm_parameter.ses_email_address.value
+    SES_FROM_EMAIL_ADDRESS        = local.ses_from_email_address
     TO_EMAIL_ADDRESSES_PARAM_NAME = aws_ssm_parameter.pharmai_to_email_addresses_json.name
     OPENAI_API_KEY                = var.openai_api_key
   }
@@ -105,7 +106,7 @@ resource "aws_iam_policy" "pharmai" {
         "Action" : [
           "ses:SendEmail"
         ],
-        "Resource" : [data.aws_ssm_parameter.ses_email_arn.value]
+        "Resource" : [data.aws_ses_domain_identity.main.arn]
       }
     ]
   })

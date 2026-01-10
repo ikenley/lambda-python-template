@@ -106,7 +106,7 @@ resource "aws_iam_policy" "pharmai" {
         "Action" : [
           "ses:SendEmail"
         ],
-        "Resource" : [data.aws_ses_domain_identity.main.arn]
+        "Resource" : [data.aws_ses_domain_identity.ianandcatherine.arn]
       }
     ]
   })

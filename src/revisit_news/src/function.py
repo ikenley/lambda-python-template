@@ -53,11 +53,38 @@ def get_file_from_s3(s3_bucket, s3_key):
 
 
 def get_historical_articles():
-    """Fetches historical articles from random day in history"""
-    s3_key = get_random_historical_file()
+    """Fetches historical articles from the same day in a prior year"""
+    s3_key = get_historical_s3_key()
     date_label = get_date_from_s3_key(s3_key)
     articles = get_articles_from_s3(S3_BUCKET_NAME, s3_key)
     return {"articles": articles, "date_label": date_label}
+
+
+def get_historical_s3_key():
+    """Fetches the S3 key of a historical article"""
+    try:
+        s3_key = get_this_day_historical_file()
+        return s3_key
+    except Exception as e:
+        logger.info(
+            f"Failed to get this day's historical file, falling back to random: {e}"
+        )
+        s3_key = get_random_historical_file()
+        return s3_key
+
+
+def get_this_day_historical_file():
+    """Get S3 key for today's date in a randomly selected prior year"""
+    today = date.today()
+    year = random.choice([2024, 2025])
+    month = f"{today.month:02d}"
+    day = f"{today.day:02d}"
+    s3_key = f"news/nytimes/mostpopular/emailed/1/{year}/{month}/{day}/{year}-{month}-{day}-news.json"
+    logger.info(f"get_this_day_historical_file:s3_key={s3_key}")
+
+    # Verify the object exists
+    s3_client.head_object(Bucket=S3_BUCKET_NAME, Key=s3_key)
+    return s3_key
 
 
 def get_random_historical_file():

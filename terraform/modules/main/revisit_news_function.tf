@@ -17,17 +17,16 @@ module "revisit_news_lambda" {
   function_name = local.revisit_news_id
   description   = local.revisit_news_desc
   handler       = "function.handler"
-  runtime       = "python3.10"
+  runtime       = "python3.12"
   publish       = true
   timeout       = 30
 
-  source_path = "../../../src/revisit_news"
+  source_path = "../../../src/revisit_news/src"
 
   environment_variables = {
     Serverless                    = "Terraform"
-    EVENT_BUS_NAME                = data.aws_ssm_parameter.event_bus_name.value
     S3_BUCKET_NAME                = data.aws_ssm_parameter.data_lake_s3_bucket_name.value
-    SES_FROM_EMAIL_ADDRESS        = data.aws_ssm_parameter.ses_email_address.value
+    SES_FROM_EMAIL_ADDRESS        = "news@ikenley.com"
     TO_EMAIL_ADDRESSES_PARAM_NAME = aws_ssm_parameter.to_email_addresses_json.name
   }
 

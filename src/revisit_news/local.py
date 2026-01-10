@@ -1,4 +1,9 @@
-from function import handler
+from dotenv import load_dotenv
+
+# Load variables from .env file
+load_dotenv()
+
+from src.function import handler
 
 event = {
     "version": "0",

@@ -81,7 +81,7 @@ resource "aws_iam_policy" "revisit_news" {
         "Action" : [
           "ses:SendEmail"
         ],
-        "Resource" : [data.aws_ssm_parameter.ses_email_arn.value]
+        "Resource" : [data.aws_ses_domain_identity.ikenley.arn]
       }
     ]
   })
